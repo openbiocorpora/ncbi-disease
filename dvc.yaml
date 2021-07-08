@@ -1,0 +1,36 @@
+stages:
+  Pre-process:
+    cmd: papermill notebook/1.Parsing_original_data.ipynb     -p input_file original-data/test/NCBItestset_corpus.txt     -p
+      output_file data/NCBItestset_corpus.nd.json     output/1.Parsing_original_data.out.ipynb
+    deps:
+    - notebook/1.Parsing_original_data.ipynb
+    - original-data/test/NCBItestset_corpus.txt
+    outs:
+    - data/NCBItestset_corpus.nd.json
+    - output/1.Parsing_original_data.out.ipynb
+  Run_Metamap:
+    cmd: papermill notebook/1.Parsing_original_data.ipynb     -p input_file data/NCBItestset_corpus.nd.json     -p
+      output_file data/MetaMap_output.nd.json     output/2.Run_MetaMap.out.ipynb
+    deps:
+    - data/NCBItestset_corpus.nd.json
+    - notebook/2.Run_MetaMap.ipynb
+    outs:
+    - data/MetaMap_output.nd.json
+    - output/2.Run_MetaMap.out.ipynb
+  Post-process:
+    cmd: papermill notebook/3.Post-process_MetaMap.ipynb     -p input_file data/MetaMap_output.nd.json     -p
+      answer_file original-data/test/NCBItestset_corpus.txt     -p output_file data/ncbi_disease_metamap.conll     output/3.Post-process_MetaMap.out.ipynb
+    deps:
+    - data/MetaMap_output.nd.json
+    - notebook/3.Post-process_MetaMap.ipynb
+    - original-data/test/NCBItestset_corpus.txt
+    outs:
+    - data/ncbi_disease_metamap.conll
+    - output/3.Post-process_MetaMap.out.ipynb
+  Eval_Metamap:
+    cmd: ./script/conlleval < data/ncbi_disease_metamap.conll > data/ncbi_disease_metamal_eval.txt
+    deps:
+    - data/ncbi_disease_metamap.conll
+    - script/conlleval
+    outs:
+    - data/ncbi_disease_metamal_eval.txt
