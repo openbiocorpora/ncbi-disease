@@ -1,0 +1,69 @@
+schema: '2.0'
+stages:
+  Pre-process:
+    cmd: papermill notebook/1.Parsing_original_data.ipynb     -p input_file original-data/test/NCBItestset_corpus.txt     -p
+      output_file data/NCBItestset_corpus.nd.json     output/1.Parsing_original_data.out.ipynb
+    deps:
+    - path: notebook/1.Parsing_original_data.ipynb
+      md5: 8fb6be49db41cb1276842693c78cdb79
+      size: 3874
+    - path: original-data/test/NCBItestset_corpus.txt
+      md5: 933607f5b3f889fec54becf9abb06499
+      size: 189219
+    outs:
+    - path: data/NCBItestset_corpus.nd.json
+      md5: f5c6e58e16a913f85e095a34ad61151c
+      size: 138287
+    - path: output/1.Parsing_original_data.out.ipynb
+      md5: bd826ec71abe6517febd0c119cc0f6f1
+      size: 8981
+  Eval_Metamap:
+    cmd: ./script/conlleval < data/ncbi_disease_metamap.conll > data/ncbi_disease_metamap_eval.txt
+    deps:
+    - path: data/ncbi_disease_metamap.conll
+      md5: 41cc80ccfb797fa5f7730f3f8bc53561
+      size: 58395
+    - path: script/conlleval
+      md5: ab1d982c6c2229d74bc66e446db4b68f
+      size: 12743
+    outs:
+    - path: data/ncbi_disease_metamap_eval.txt
+      md5: 9af07a5d61cac11d00ea27d02199db8c
+      size: 215
+  Run_Metamap:
+    cmd: papermill notebook/2.Run_MetaMap.ipynb     -p input_file data/NCBItestset_corpus.nd.json     -p
+      output_file data/MetaMap_output.nd.json     output/2.Run_MetaMap.out.ipynb
+    deps:
+    - path: data/NCBItestset_corpus.nd.json
+      md5: f5c6e58e16a913f85e095a34ad61151c
+      size: 138287
+    - path: notebook/2.Run_MetaMap.ipynb
+      md5: 6b8fe9488dbaaa43a6cfc10bb2fd4b1c
+      size: 16394
+    outs:
+    - path: data/MetaMap_output.nd.json
+      md5: 3237fd64d9331fb7514b715751bbc14e
+      size: 492154
+    - path: output/2.Run_MetaMap.out.ipynb
+      md5: 06417d92f1c759eb74284f8f8a27972c
+      size: 39809
+  Post-process:
+    cmd: papermill notebook/3.Post-process_MetaMap.ipynb     -p input_file data/MetaMap_output.nd.json     -p
+      answer_file original-data/test/NCBItestset_corpus.txt     -p output_file data/ncbi_disease_metamap.conll     output/3.Post-process_MetaMap.out.ipynb
+    deps:
+    - path: data/MetaMap_output.nd.json
+      md5: 3237fd64d9331fb7514b715751bbc14e
+      size: 492154
+    - path: notebook/3.Post-process_MetaMap.ipynb
+      md5: 037c5d1aac76abaf796bbcd209ef95c0
+      size: 23116
+    - path: original-data/test/NCBItestset_corpus.txt
+      md5: 933607f5b3f889fec54becf9abb06499
+      size: 189219
+    outs:
+    - path: data/ncbi_disease_metamap.conll
+      md5: 41cc80ccfb797fa5f7730f3f8bc53561
+      size: 58395
+    - path: output/3.Post-process_MetaMap.out.ipynb
+      md5: fa3f63a02537627a688bdc62bacb4b9d
+      size: 34223

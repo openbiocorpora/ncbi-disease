@@ -9,7 +9,7 @@ stages:
     - data/NCBItestset_corpus.nd.json
     - output/1.Parsing_original_data.out.ipynb
   Run_Metamap:
-    cmd: papermill notebook/1.Parsing_original_data.ipynb     -p input_file data/NCBItestset_corpus.nd.json     -p
+    cmd: papermill notebook/2.Run_MetaMap.ipynb     -p input_file data/NCBItestset_corpus.nd.json     -p
       output_file data/MetaMap_output.nd.json     output/2.Run_MetaMap.out.ipynb
     deps:
     - data/NCBItestset_corpus.nd.json
@@ -28,9 +28,9 @@ stages:
     - data/ncbi_disease_metamap.conll
     - output/3.Post-process_MetaMap.out.ipynb
   Eval_Metamap:
-    cmd: ./script/conlleval < data/ncbi_disease_metamap.conll > data/ncbi_disease_metamal_eval.txt
+    cmd: ./script/conlleval < data/ncbi_disease_metamap.conll > data/ncbi_disease_metamap_eval.txt
     deps:
     - data/ncbi_disease_metamap.conll
     - script/conlleval
     outs:
-    - data/ncbi_disease_metamal_eval.txt
+    - data/ncbi_disease_metamap_eval.txt
